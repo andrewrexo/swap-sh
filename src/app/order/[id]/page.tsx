@@ -11,12 +11,8 @@ export default async function OrderPage({ params }: { params: { id: string } }) 
   const { id } = params;
   const order = await getExodusOrder(id);
 
-  console.log(order);
-
   if (!order) {
     notFound();
-  } else {
-    console.log("yo", { order });
   }
 
   const providerOrder = await getProviderOrder(id);

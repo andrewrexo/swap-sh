@@ -7,4 +7,6 @@ const config = {
 export const exodusV3Url = "https://exchange-s.exodus.io/v3";
 export const exodusPricingServerUrl = "https://pricing.a.exodus.io";
 
+export const baseUrl = process.env.NODE_ENV === "development" ? "http://127.0.0.1:3000/api" : "https://swap-iota-nine.vercel.app/api"
+
 export default config;

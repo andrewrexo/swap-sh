@@ -1,4 +1,4 @@
-import { exodusV3Url } from "../config";
+import { baseUrl, exodusV3Url } from "../config";
 import { SwapError, SwapErrorType } from "../errors";
 import { prepareRequest } from "../fetch";
 
@@ -7,7 +7,7 @@ export const getRateForPair = async (
   toAssetId: string
 ): Promise<any> => {
   try {
-    const request = `http://127.0.0.1:3000/api/rates/${fromAssetId}/${toAssetId}`;
+    const request = `${baseUrl}/rates/${fromAssetId}/${toAssetId}`;
     const response = await fetch(request);
 
     if (!response.ok) {

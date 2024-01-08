@@ -1,12 +1,13 @@
 import { ExodusOrderUpdate } from "@/app/api/order/update/route";
 
 import { SwapError, SwapErrorType } from "../errors";
+import { baseUrl } from "../config";
 
 export const getExodusOrder = async (
   id: string
 ): Promise<ExodusOrderResponse> => {
   try {
-    const request = `http://127.0.0.1:3000/api/order/${id}`;
+    const request = `${baseUrl}/order/${id}`;
     const response = await fetch(request, {
       cache: 'no-store'
     });
@@ -19,7 +20,7 @@ export const getExodusOrder = async (
     }
 
     const order = await response.json();
-    
+
     if(!order.id) {
       return;
     }
@@ -36,7 +37,7 @@ export const getExodusOrder = async (
 
 export const getProviderOrder = async (id: string): Promise<any> => {
   try {
-    const request = `http://127.0.0.1:3000/api/order/${id}/provider`;
+    const request = `${baseUrl}/order/${id}/provider`;
     const response = await fetch(request);
 
     if (!response.ok) {
@@ -61,7 +62,7 @@ export const createExodusOrder = async (
   params: ExodusOrder
 ): Promise<ExodusOrderResponse> => {
   try {
-    const request = `http://127.0.0.1:3000/api/order/create`;
+    const request = `${baseUrl}/order/create`;
     const response = await fetch(request, {
       body: JSON.stringify(params),
       method: "POST",
@@ -90,7 +91,7 @@ export const updateExodusOrder = async (
   params: ExodusOrderUpdate
 ): Promise<ExodusOrderResponse> => {
   try {
-    const request = `http://127.0.0.1:3000/api/order/update`;
+    const request = `${baseUrl}/order/update`;
     const response = await fetch(request, {
       body: JSON.stringify(params),
       method: "POST",
