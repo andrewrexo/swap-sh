@@ -60,7 +60,7 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
 
   useEffect(() => {
     if (exchangeRate) {
-      const toAmount = parseFloat((fromAmount * exchangeRate.amount.value - exchangeRate.minerFee.value).toFixed(2));
+      const toAmount = parseFloat((fromAmount * exchangeRate.amount.value - exchangeRate.minerFee.value).toFixed(8));
 
       setToAmount(toAmount);
     }
