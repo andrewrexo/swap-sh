@@ -1,9 +1,7 @@
 import { prepareRequest } from "@/lib/fetch";
 import type { NextRequest } from "next/server";
 import { ipAddress } from "@vercel/edge";
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";
 
 export async function GET(req: NextRequest, { params }: { params: { pair: Array<string> } }) {
   const { pair } = params;
