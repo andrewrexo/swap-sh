@@ -1,8 +1,16 @@
 import { prepareRequest } from "@/lib/fetch";
 import type { NextRequest } from "next/server";
+import { ipAddress } from "@vercel/edge";
+export const config = {
+  runtime: "edge",
+};
 
 export async function GET(req: NextRequest, { params }: { params: { pair: Array<string> } }) {
   const { pair } = params;
+
+  console.log({ headers: req.headers });
+  console.log(req.headers.get("X-Forwarded-For"));
+  console.log({ ipEdge: ipAddress(req) });
   const response = await fetch(prepareRequest(`pairs/${pair[0]}_${pair[1]}/rates`, "GET", [], req.ip));
 
   const ip = req.ip;
