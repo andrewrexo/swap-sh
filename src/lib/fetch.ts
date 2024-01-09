@@ -24,7 +24,7 @@ export const prepareRequest = (
   }
 
   const headers = new Headers({
-    "Forwarded": `for=${ip}`,
+    "X-Forwarded-For": `${ip}`,
     "Content-Type": "application/json",
     "App-Name": `${config.appName}`,
     "App-Version": `${config.appVersion}`,
