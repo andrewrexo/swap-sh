@@ -5,6 +5,9 @@ export async function GET(req: NextRequest, { params }: { params: { pair: Array<
   const { pair } = params;
   const response = await fetch(prepareRequest(`pairs/${pair[0]}_${pair[1]}/rates`, "GET", [], req.ip));
 
+  const ip = req.ip;
+  console.log({ ip, req });
+
   if (!response.ok) {
     console.error("Request to Exodus Exchange rates API has failed", response.status);
   }
