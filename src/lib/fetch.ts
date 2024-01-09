@@ -12,8 +12,8 @@ export const dynamic = 'force-dynamic'
 export const prepareRequest = (
   endpoint: string,
   method: "GET" | "POST" | "PATCH",
-  ip?: string,
   params?: ExodusRequestParams[],
+  ip?: string,
 ) => {
   const url = new URL(`${exodusV3Url}/${endpoint}`);
 
