@@ -1,19 +1,7 @@
-import {
-  Asset,
-  AssetNetworkRecord,
-  FiatCurrency,
-  SwapDirection,
-} from "@/lib/swap/types";
+import { Asset, AssetNetworkRecord, FiatCurrency, SwapDirection } from "@/lib/swap/types";
 import { SwapSelectionDialog } from "./swap-selection-dialog";
 import { SwapWidgetButton } from "./swap-widget-button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "./ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { SwapWidgetSettingsDialog } from "./swap-widget-settings-dialog";
 
 export function SwapWidgetQuote({
@@ -41,7 +29,7 @@ export function SwapWidgetQuote({
     <Card className="max-w-[500px]">
       <CardHeader className="pb-4 flex flex-row justify-between items-start">
         <div className="space-y-1">
-          <CardTitle>swaps.sh</CardTitle>
+          <CardTitle>XOSwap</CardTitle>
           <CardDescription>rapid swaps, low fees. no b.s.</CardDescription>
         </div>
         <div className="mt-0">
