@@ -353,7 +353,7 @@ export function SwapWidgetConfirm({
         )}
         <div
           className={`${
-            swapStage === SwapStageEvent.Pending || (order.status === OrderStatus.Complete && `hidden`)
+            (swapStage === SwapStageEvent.Pending || order.status === OrderStatus.Complete) && `hidden`
           } flex flex-col justify-center`}
         >
           {swapEvents.slice(0, 4).map((notification, index) => (
