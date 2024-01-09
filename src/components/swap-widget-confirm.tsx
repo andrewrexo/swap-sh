@@ -1,11 +1,11 @@
 "use client";
-import { BellRing, Check } from "lucide-react";
+import { ArrowBigLeftDash, ArrowBigRightDash, ArrowLeftRightIcon, BellRing, Check } from "lucide-react";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import QRCode from "react-qr-code";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +23,7 @@ import {
   getExodusOrder,
   updateExodusOrder,
 } from "@/lib/swap/order";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Animate } from "@/components/ui/animate";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
@@ -99,7 +99,7 @@ export function SwapWidgetConfirm({
           title: `Your ${fromAsset.id}_${toAsset.id} order has completed!`,
           time: Date.now(),
         });
-        toast(`Your ${fromAsset.id}_${toAsset.id} order has completed! TXID: ${exodusOrder.toTransactionId}`);
+        toast(`zr ${fromAsset.id}_${toAsset.id} order has completed! TXID: ${exodusOrder.toTransactionId}`);
         clearInterval(interval);
       } else if (exodusOrder.status === OrderStatus.Failed) {
         updateSwapEvents({
@@ -193,20 +193,32 @@ export function SwapWidgetConfirm({
     switch (swapStage) {
       case SwapStageEvent.WaitingForProvider: {
         return (
-          <Animate animateKey="swap-show-progress" className="flex flex-col h-full w-full gap-3 items-center">
-            <h1 className="text-sm font-semibold text-primary text-center">
+          <Animate animateKey="swap-show-progress" className="flex flex-col h-full w-full gap-8 md:gap-4 items-center">
+            <h1 className="font-semibold text-primary text-center text-lg">
               {order.status === OrderStatus.Complete
                 ? `Your swap is complete!`
                 : `Your swap is in progress, the provider will send your funds shortly.`}
             </h1>
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center">
-                <Image width={24} height={24} src={fromAsset.logo ?? ""} alt={fromAsset.symbol} className="w-8 h-8" />
+            <div className="flex gap-2, items-center">
+              <div className="flex flex-col items-center gap-1">
+                <Image width={48} height={48} src={fromAsset.logo ?? ""} alt={fromAsset.symbol} className="w-10 h-10" />
                 <p className="text-xs">{`${fromAmount} ${fromAsset.id}`}</p>
               </div>
-              {"->"}
-              <div className="flex flex-col items-center">
-                <Image width={24} height={24} src={toAsset.logo ?? ""} alt={toAsset.symbol} className="w-8 h-8" />
+              <motion.div
+                className="mb-5"
+                initial={{
+                  scale: 1,
+                }}
+                animate={{
+                  rotate: 180,
+                  scale: [1.2, 1],
+                }}
+                transition={{ delay: 1.0, type: "spring", stiffness: 100, duration: 0.75, times: [0, 0.5, 1] }}
+              >
+                <ArrowLeftRightIcon className="text-primary w-7 h-7" />
+              </motion.div>
+              <div className="flex flex-col items-center gap-1">
+                <Image width={24} height={24} src={toAsset.logo ?? ""} alt={toAsset.symbol} className="w-10 h-10" />
                 <p className="text-xs">{`${toAmount} ${toAsset.id}`}</p>
               </div>
             </div>
@@ -226,12 +238,18 @@ export function SwapWidgetConfirm({
       case SwapStageEvent.WaitingForDeposit: {
         return (
           <Animate animateKey="swap-show-qr">
-            <div className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col gap-3 items-center pb-4 md:pb-0">
               <div className="w-full max-w-40 bg-white p-2 h-auto">
-                {order?.payInAddress && <QRCode value={order.payInAddress} className="h-auto max-w-full w-full" />}
+                {order && order.status === OrderStatus.InProgress && order?.payInAddress && (
+                  <QRCode value={order.payInAddress} className="h-auto max-w-full w-full" />
+                )}
               </div>
               <p className="text-xs font-medium text-muted-foreground">{`${order?.payInAddress}`}</p>
               <p className="font-medium text-xs">{`Please send ${fromAmount} ${fromAsset?.id} to the address above.`}</p>
+
+              <p className="text-xs text-center">{`${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(8)} ${
+                toAsset?.id
+              }`}</p>
             </div>
           </Animate>
         );
@@ -306,21 +324,19 @@ export function SwapWidgetConfirm({
 
   return (
     <Card className={cn("md:w-[700px] space-y-2", className)} {...props}>
-      <CardHeader className="flex justify-between flex-col gap-4 pb-3">
+      <CardHeader className="flex justify-between flex-col gap-4 pb-3 p-5">
         <div className="flex justify-between">
-          <div className="flex flex-col space-y-2">
-            <CardTitle>Swap</CardTitle>
-            <CardDescription>{order ? `${order?.id}` : `${new Date().toLocaleDateString()}`}</CardDescription>
+          <div className="flex flex-col">
+            <p className="text-lg font-semibold">Swap</p>
           </div>
-          <div className="flex flex-col space-y-2 text-right">
+          <div className="flex flex-col text-right pt-[6px]">
             <CardTitle className="text-primary">
-              {fromAsset?.id}_{toAsset?.id}
+              <CardDescription className="text-muted-foreground font-normal">
+                {order
+                  ? `${formatDate(new Date(order.createdAt))}`
+                  : `${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(2)} ${toAsset?.id}`}
+              </CardDescription>
             </CardTitle>
-            <CardDescription>
-              {order &&
-                order.status === OrderStatus.InProgress &&
-                `${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(2)} ${toAsset?.id}`}
-            </CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -329,14 +345,16 @@ export function SwapWidgetConfirm({
           swapStage !== SwapStageEvent.Pending &&
           swapEvents.filter((event) => !isNaN(event.time)).length > 0 &&
           `md:grid-cols-[auto_10px_40%]`
-        } md:gap-4 pb-2 gap-6`}
+        } md:gap-3 pb-0 gap-6`}
       >
         <AnimatePresence mode="wait">{renderPanel()}</AnimatePresence>
-        {swapStage !== SwapStageEvent.Pending && <span className="hidden md:block" />}
+        {swapStage !== SwapStageEvent.Pending && swapStage !== SwapStageEvent.Complete && (
+          <span className="hidden md:block" />
+        )}
         <div
-          className={
-            swapStage === SwapStageEvent.Pending || order.status === OrderStatus.Complete ? `hidden` : undefined
-          }
+          className={`${
+            swapStage === SwapStageEvent.Pending || (order.status === OrderStatus.Complete && `hidden`)
+          } flex flex-col justify-center`}
         >
           {swapEvents.slice(0, 4).map((notification, index) => (
             <div key={index} className="mb-2 grid grid-cols-[20px_1fr] items-start last:pb-0">
@@ -355,7 +373,7 @@ export function SwapWidgetConfirm({
           ))}
         </div>
       </CardContent>
-      <CardFooter className="flex flex-col gap-2 space-y-3">
+      <CardFooter className="flex flex-col gap-2 space-y-4 p-5">
         <Separator orientation="horizontal" className="" />
         <div className=" flex items-center space-x-4 rounded-md border p-4 w-full">
           <BellRing />
