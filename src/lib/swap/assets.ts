@@ -17,7 +17,7 @@ export const getAssets = async (
   try {
     const request = prepareRequest("assets", "GET", [
       ...(params ?? []),
-      { key: "limit", value: "3000" },
+      { key: "limit", value: "6000" },
     ]);
     const response = await fetch(request);
 
