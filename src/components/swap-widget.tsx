@@ -14,8 +14,8 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
   const [order, setOrder] = useState<ExodusOrderResponse>();
   const [fromAmount, setFromAmount] = useState<number>(1);
   const [toAmount, setToAmount] = useState<number>(0);
-  const [fromAsset, setFromAsset] = useState<Asset | undefined>(assets.solana.find((asset) => asset.id === "USDCSOL"));
-  const [toAsset, setToAsset] = useState<Asset | undefined>(assets.solana.find((asset) => asset.id === "SOL"));
+  const [fromAsset, setFromAsset] = useState<Asset | undefined>(assets.solana.find((asset) => asset.id === "SOL"));
+  const [toAsset, setToAsset] = useState<Asset | undefined>(assets.solana.find((asset) => asset.id === "USDCSOL"));
   const [swapStage, setSwapStage] = useState<SwapStageEvent>(SwapStageEvent.Draft);
   const [swapUiProgress, setSwapUiProgress] = useState<SwapStageEvent>(SwapStageEvent.Draft);
 
