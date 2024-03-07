@@ -10,7 +10,12 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { Asset, AssetNetworkRecord, FiatCurrency, SwapDirection } from "@/lib/swap/types";
+import {
+  Asset,
+  AssetNetworkRecord,
+  FiatCurrency,
+  SwapDirection,
+} from "@/lib/swap/types";
 import { TargetIcon } from "@radix-ui/react-icons";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { networkToColorMap } from "@/lib/swap/constants";
@@ -26,6 +31,8 @@ export function SwapSelectionDialog({
   toAsset,
   fromAmount,
   toAmount,
+  minimum,
+  maximum,
   direction,
   assetCallback,
   amountCallback,
@@ -38,13 +45,17 @@ export function SwapSelectionDialog({
   fromAsset: Asset | undefined;
   fromAmount: number;
   toAmount: number;
+  minimum: number;
+  maximum: number;
   direction: SwapDirection;
   assetCallback: (asset: Asset, direction: SwapDirection) => void;
   amountCallback: (amount: number, direction: SwapDirection) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(1);
-  const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(direction === "from" ? fromAsset : toAsset);
+  const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(
+    direction === "from" ? fromAsset : toAsset
+  );
 
   const buttonClick = () => {
     setOpen((open) => !open);
@@ -65,9 +76,15 @@ export function SwapSelectionDialog({
       <div className="flex w-full max-w-sm items-end justify-between space-x-2">
         <div className="flex flex-col items-start gap-y-1">
           {selectedAsset && (
-            <Label className={`text-xs font-normal text-muted-foreground`}>{selectedAsset.network}</Label>
+            <Label className={`text-xs font-normal text-muted-foreground`}>
+              {selectedAsset.network}
+            </Label>
           )}
-          <Button onClick={buttonClick} variant="outline" className="min-w-32 justify-between">
+          <Button
+            onClick={buttonClick}
+            variant="outline"
+            className="min-w-32 justify-between"
+          >
             {selectedAsset?.symbol || children}
             <ChevronDownIcon />
           </Button>
@@ -86,10 +103,11 @@ export function SwapSelectionDialog({
           )}
           <Input
             type="number"
-            min="0"
             placeholder="0.00000000"
             className="max-w-44"
-            value={direction === "from" ? fromAmount.toString() : toAmount.toString()}
+            value={
+              direction === "from" ? fromAmount.toString() : toAmount.toString()
+            }
             required
             disabled={disabled}
             onChange={(e) => {
@@ -101,7 +119,10 @@ export function SwapSelectionDialog({
         </div>
       </div>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search by asset or network..." tabIndex={-1} />
+        <CommandInput
+          placeholder="Search by asset or network..."
+          tabIndex={-1}
+        />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           {Object.entries(assets).map((network) => {
@@ -120,9 +141,13 @@ export function SwapSelectionDialog({
                     }}
                     className="gap-1"
                   >
-                    <TargetIcon className={`${networkToColorMap.get(asset.network)}`} />
+                    <TargetIcon
+                      className={`${networkToColorMap.get(asset.network)}`}
+                    />
                     {`${asset.name} (${asset.symbol})`}
-                    <CommandShortcut>${asset.pricing && asset.pricing[currency]}</CommandShortcut>
+                    <CommandShortcut>
+                      ${asset.pricing && asset.pricing[currency]}
+                    </CommandShortcut>
                   </CommandItem>
                 ))}
               </CommandGroup>

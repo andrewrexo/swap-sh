@@ -1,23 +1,43 @@
 "use client";
-import { Asset, AssetNetworkRecord, FiatCurrency, SwapDirection } from "@/lib/swap/types";
+import {
+  Asset,
+  AssetNetworkRecord,
+  FiatCurrency,
+  SwapDirection,
+} from "@/lib/swap/types";
 import { useEffect, useState } from "react";
 import { SwapWidgetQuote } from "./swap-widget-quote";
 import { SwapWidgetConfirm } from "./swap-widget-confirm";
 import { AnimatePresence, motion } from "framer-motion";
 import { Animate } from "./ui/animate";
-import { ExodusOrderResponse, SwapStageEvent, getExodusOrder, getProviderOrder } from "@/lib/swap/order";
+import {
+  ExodusOrderResponse,
+  SwapStageEvent,
+  getExodusOrder,
+  getProviderOrder,
+} from "@/lib/swap/order";
 import { getRateForPair } from "@/lib/swap/rates";
 
 export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
   const [currency, setCurrency] = useState<FiatCurrency>(FiatCurrency.USD);
   const [exchangeRate, setExchangeRate] = useState<any>(0);
+  const [minimum, setMinimum] = useState<number>(0);
+  const [maximum, setMaximum] = useState<number>(0);
   const [order, setOrder] = useState<ExodusOrderResponse>();
   const [fromAmount, setFromAmount] = useState<number>(1);
   const [toAmount, setToAmount] = useState<number>(0);
-  const [fromAsset, setFromAsset] = useState<Asset | undefined>(assets.solana.find((asset) => asset.id === "SOL"));
-  const [toAsset, setToAsset] = useState<Asset | undefined>(assets.solana.find((asset) => asset.id === "USDCSOL"));
-  const [swapStage, setSwapStage] = useState<SwapStageEvent>(SwapStageEvent.Draft);
-  const [swapUiProgress, setSwapUiProgress] = useState<SwapStageEvent>(SwapStageEvent.Draft);
+  const [fromAsset, setFromAsset] = useState<Asset | undefined>(
+    assets.solana.find((asset) => asset.id === "SOL")
+  );
+  const [toAsset, setToAsset] = useState<Asset | undefined>(
+    assets.solana.find((asset) => asset.id === "USDCSOL")
+  );
+  const [swapStage, setSwapStage] = useState<SwapStageEvent>(
+    SwapStageEvent.Draft
+  );
+  const [swapUiProgress, setSwapUiProgress] = useState<SwapStageEvent>(
+    SwapStageEvent.Draft
+  );
 
   const placeOrderWithProvider = () => {
     setSwapStage((stage) => SwapStageEvent.Pending);
@@ -39,7 +59,10 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
     }
   };
 
-  const handleSwap = (swapStage: SwapStageEvent, orderResponse?: ExodusOrderResponse) => {
+  const handleSwap = (
+    swapStage: SwapStageEvent,
+    orderResponse?: ExodusOrderResponse
+  ) => {
     if (orderResponse && orderResponse.payInAddress !== "") {
       setOrder(orderResponse);
     }
@@ -54,13 +77,21 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
       rates.then((value) => {
         const lastRate = value.pop();
         setExchangeRate(lastRate);
+        setFromAmount(lastRate.min.value * 1.05);
+        setMinimum(lastRate.min.value * 1.03);
+        setMaximum(lastRate.max.value * 0.97);
       });
     }
   }, [fromAsset, toAsset]);
 
   useEffect(() => {
     if (exchangeRate) {
-      const toAmount = parseFloat((fromAmount * exchangeRate.amount.value - exchangeRate.minerFee.value).toFixed(8));
+      const toAmount = parseFloat(
+        (
+          fromAmount * exchangeRate.amount.value -
+          exchangeRate.minerFee.value
+        ).toFixed(8)
+      );
 
       setToAmount(toAmount);
     }
@@ -88,6 +119,8 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
               buttonCallback={placeOrderWithProvider}
               currency={currency}
               fromAmount={fromAmount}
+              minimum={minimum}
+              maximum={maximum}
               toAmount={toAmount}
               fromAsset={fromAsset}
               toAsset={toAsset}

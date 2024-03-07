@@ -5,8 +5,10 @@ import { useState } from "react";
 
 export function SwapWidgetButton({
   buttonCallback,
+  disabled = false,
 }: {
   buttonCallback: () => void;
+  disabled: boolean;
 }) {
   const [pending, setPending] = useState(false);
 
@@ -24,7 +26,7 @@ export function SwapWidgetButton({
       variant="default"
       className="w-full"
       onClick={onButtonClick}
-      disabled={pending}
+      disabled={disabled || pending}
     >
       {pending ? (
         <>
