@@ -14,9 +14,12 @@ import {
   CardContent,
   CardFooter,
 } from "./ui/card";
-import { SwapWidgetSettingsDialog } from "./swap-widget-settings-dialog";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "./ui/loading-spinner";
+import { Button } from "./ui/button";
+import { ArrowDownUpIcon } from "lucide-react";
+import { motion, useAnimationControls } from "framer-motion";
+import { Animate } from "./ui/animate";
 
 export function SwapWidgetQuote({
   assets,
@@ -31,6 +34,8 @@ export function SwapWidgetQuote({
   buttonCallback,
   assetCallback,
   amountCallback,
+  minimumCallback,
+  maximumCallback,
 }: {
   assets: AssetNetworkRecord;
   buttonCallback: () => void;
@@ -44,7 +49,12 @@ export function SwapWidgetQuote({
   exchangeRate: any;
   assetCallback: (asset: Asset, direction: SwapDirection) => void;
   amountCallback: (amount: number, direction: SwapDirection) => void;
+  minimumCallback: (amount: number) => void;
+  maximumCallback: (amount: number) => void;
 }) {
+  const controls = useAnimationControls();
+  const [isAnimating, setIsAnimating] = useState(false);
+
   const [limitWarning, setLimitWarning] = useState<{
     active: boolean;
     size: "maximum" | "minimum" | "";
@@ -90,43 +100,82 @@ export function SwapWidgetQuote({
           )}
         </div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-2">
-          <SwapSelectionDialog
-            assets={assets}
-            currency={currency}
-            fromAsset={fromAsset}
-            toAsset={toAsset}
-            fromAmount={fromAmount}
-            toAmount={toAmount}
-            minimum={minimum}
-            maximum={maximum}
-            disabled={!exchangeRate}
-            assetCallback={assetCallback}
-            amountCallback={amountCallback}
-            direction="from"
+      <CardContent className="flex flex-col gap-8 items-center">
+        <Animate
+          animateKey="swap-quote-switch"
+          className="flex flex-col gap-1 items-center"
+        >
+          <motion.div
+            className="flex items-center justify-between gap-2"
+            animate={isAnimating ? { y: 100 } : {}}
+            onAnimationComplete={() => {
+              if (isAnimating) {
+                const fromAssetOld = fromAsset;
+                const toAssetOld = toAsset;
+
+                amountCallback(toAmount, "from");
+                amountCallback(fromAmount, "to");
+                assetCallback(toAssetOld, "from");
+                assetCallback(fromAssetOld, "to");
+                minimumCallback(0);
+                maximumCallback(100000);
+
+                setIsAnimating(false);
+              }
+            }}
           >
-            from
-          </SwapSelectionDialog>
-        </div>
-        <div className="flex items-center justify-between w-full">
-          <SwapSelectionDialog
-            assets={assets}
-            currency={currency}
-            fromAsset={fromAsset}
-            toAsset={toAsset}
-            minimum={minimum}
-            maximum={maximum}
-            fromAmount={fromAmount}
-            toAmount={toAmount}
-            assetCallback={assetCallback}
-            amountCallback={amountCallback}
-            disabled={true}
-            direction="to"
+            <SwapSelectionDialog
+              assets={assets}
+              currency={currency}
+              fromAsset={fromAsset}
+              toAsset={toAsset}
+              fromAmount={fromAmount}
+              toAmount={toAmount}
+              minimum={minimum}
+              maximum={maximum}
+              disabled={!exchangeRate}
+              assetCallback={assetCallback}
+              amountCallback={amountCallback}
+              direction="from"
+            >
+              from
+            </SwapSelectionDialog>
+          </motion.div>
+          <motion.div
+            className="flex justify-center w-fit mt-2 hover:cursor-pointer"
+            onClick={() => setIsAnimating(true)}
+            animate={
+              isAnimating ? { rotate: 360, transition: { duration: 0.5 } } : {}
+            }
+            onAnimationComplete={() => setIsAnimating(false)}
           >
-            to
-          </SwapSelectionDialog>
-        </div>
+            <ArrowDownUpIcon className="w-6 h-6 text-primary hover:cursor-pointer" />
+          </motion.div>
+          <motion.div
+            className="flex items-center justify-between w-full"
+            animate={isAnimating ? { y: -100 } : {}}
+            onAnimationComplete={() => {
+              setIsAnimating(false);
+            }}
+          >
+            <SwapSelectionDialog
+              assets={assets}
+              currency={currency}
+              fromAsset={fromAsset}
+              toAsset={toAsset}
+              minimum={minimum}
+              maximum={maximum}
+              fromAmount={fromAmount}
+              toAmount={toAmount}
+              assetCallback={assetCallback}
+              amountCallback={amountCallback}
+              disabled={true}
+              direction="to"
+            >
+              to
+            </SwapSelectionDialog>
+          </motion.div>
+        </Animate>
       </CardContent>
       <CardFooter className="flex flex-col gap-y-6">
         {limitWarning.active && minimum != 0 ? (

@@ -136,6 +136,8 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
               exchangeRate={exchangeRate}
               assetCallback={handleAssetChange}
               amountCallback={handleAmountChange}
+              minimumCallback={(value) => setMinimum(value)}
+              maximumCallback={(value) => setMaximum(value)}
             />
           </Animate>
         );

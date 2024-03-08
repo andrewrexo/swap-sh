@@ -1,5 +1,11 @@
 "use client";
-import { ArrowBigLeftDash, ArrowBigRightDash, ArrowLeftRightIcon, BellRing, Check } from "lucide-react";
+import {
+  ArrowBigLeftDash,
+  ArrowBigRightDash,
+  ArrowLeftRightIcon,
+  BellRing,
+  Check,
+} from "lucide-react";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,13 +14,37 @@ import QRCode from "react-qr-code";
 import { cn, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Asset } from "@/lib/swap/types";
-import { QuestionMarkCircledIcon, QuestionMarkIcon, ReloadIcon } from "@radix-ui/react-icons";
-import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  QuestionMarkCircledIcon,
+  QuestionMarkIcon,
+  ReloadIcon,
+} from "@radix-ui/react-icons";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   ExodusOrderResponse,
   OrderStatus,
@@ -56,7 +86,10 @@ export function SwapWidgetConfirm({
   fromAsset: Asset | undefined;
   order: ExodusOrderResponse | undefined;
   //setOrder: () => void;
-  swapCallback?: (swapStage: SwapStageEvent, orderResponse?: ExodusOrderResponse) => void;
+  swapCallback?: (
+    swapStage: SwapStageEvent,
+    orderResponse?: ExodusOrderResponse
+  ) => void;
   swapStage: SwapStageEvent;
 } & CardProps) {
   const [exodusOrder, setExodusOrder] = useState(order);
@@ -99,7 +132,9 @@ export function SwapWidgetConfirm({
           title: `Your ${fromAsset.id}_${toAsset.id} order has completed!`,
           time: Date.now(),
         });
-        toast(`zr ${fromAsset.id}_${toAsset.id} order has completed! TXID: ${exodusOrder.toTransactionId}`);
+        toast(
+          `zr ${fromAsset.id}_${toAsset.id} order has completed! TXID: ${exodusOrder.toTransactionId}`
+        );
         clearInterval(interval);
       } else if (exodusOrder.status === OrderStatus.Failed) {
         updateSwapEvents({
@@ -179,11 +214,15 @@ export function SwapWidgetConfirm({
           setButtonDisabled(false);
           swapCallback(SwapStageEvent.WaitingForDeposit, o);
           updateSwapEvents({ title: "Swap in progress", time: Date.now() });
-          toast(`Your ${fromAsset?.id}_${toAsset?.id} swap has been created. Please send your deposit.`);
+          toast(
+            `Your ${fromAsset?.id}_${toAsset?.id} swap has been created. Please send your deposit.`
+          );
         }
       })
       .catch((e) => {
-        toast(`Your ${fromAsset?.id}_${toAsset?.id} swap has failed to create.`);
+        toast(
+          `Your ${fromAsset?.id}_${toAsset?.id} swap has failed to create.`
+        );
         console.log(e);
         setButtonDisabled(false);
       });
@@ -193,7 +232,10 @@ export function SwapWidgetConfirm({
     switch (swapStage) {
       case SwapStageEvent.WaitingForProvider: {
         return (
-          <Animate animateKey="swap-show-progress" className="flex flex-col h-full w-full gap-8 md:gap-4 items-center">
+          <Animate
+            animateKey="swap-show-progress"
+            className="flex flex-col h-full w-full gap-8 md:gap-4 items-center"
+          >
             <h1 className="font-semibold text-primary text-center text-lg">
               {order.status === OrderStatus.Complete
                 ? `Your swap is complete!`
@@ -201,7 +243,13 @@ export function SwapWidgetConfirm({
             </h1>
             <div className="flex gap-2, items-center">
               <div className="flex flex-col items-center gap-1">
-                <Image width={48} height={48} src={fromAsset.logo ?? ""} alt={fromAsset.symbol} className="w-10 h-10" />
+                <Image
+                  width={48}
+                  height={48}
+                  src={fromAsset.logo ?? ""}
+                  alt={fromAsset.symbol}
+                  className="w-10 h-10"
+                />
                 <p className="text-xs">{`${fromAmount} ${fromAsset.id}`}</p>
               </div>
               <motion.div
@@ -213,24 +261,39 @@ export function SwapWidgetConfirm({
                   rotate: 180,
                   scale: [1.2, 1],
                 }}
-                transition={{ delay: 1.0, type: "spring", stiffness: 100, duration: 0.75, times: [0, 0.5, 1] }}
+                transition={{
+                  delay: 1.0,
+                  type: "spring",
+                  stiffness: 100,
+                  duration: 0.75,
+                  times: [0, 0.5, 1],
+                }}
               >
                 <ArrowLeftRightIcon className="text-primary w-7 h-7" />
               </motion.div>
               <div className="flex flex-col items-center gap-1">
-                <Image width={24} height={24} src={toAsset.logo ?? ""} alt={toAsset.symbol} className="w-10 h-10" />
+                <Image
+                  width={24}
+                  height={24}
+                  src={toAsset.logo ?? ""}
+                  alt={toAsset.symbol}
+                  className="w-10 h-10"
+                />
                 <p className="text-xs">{`${toAmount} ${toAsset.id}`}</p>
               </div>
             </div>
             <a
               className="text-muted-foreground max-w-[300px] break-words text-sm text-center"
-              href={`${networkBlockExplorerMap.get(toAsset.network)}${order.toTransactionId}`}
+              href={`${networkBlockExplorerMap.get(toAsset.network)}${
+                order.toTransactionId
+              }`}
               target="_blank"
             >
               {order.toTransactionId}
             </a>
             <p className="text-xs break-words text-center mt-auto">
-              If you have any issues with your swap, please contact us with your Order ID.
+              If you have any issues with your swap, please contact us with your
+              Order ID.
             </p>
           </Animate>
         );
@@ -240,16 +303,21 @@ export function SwapWidgetConfirm({
           <Animate animateKey="swap-show-qr">
             <div className="flex flex-col gap-3 items-center pb-4 md:pb-0">
               <div className="w-full max-w-40 bg-white p-2 h-auto">
-                {order && order.status === OrderStatus.InProgress && order?.payInAddress && (
-                  <QRCode value={order.payInAddress} className="h-auto max-w-full w-full" />
-                )}
+                {order &&
+                  order.status === OrderStatus.InProgress &&
+                  order?.payInAddress && (
+                    <QRCode
+                      value={order.payInAddress}
+                      className="h-auto max-w-full w-full"
+                    />
+                  )}
               </div>
               <p className="text-xs font-medium text-muted-foreground">{`${order?.payInAddress}`}</p>
               <p className="font-medium text-xs">{`Please send ${fromAmount} ${fromAsset?.id} to the address above.`}</p>
 
-              <p className="text-xs text-center">{`${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(8)} ${
-                toAsset?.id
-              }`}</p>
+              <p className="text-xs text-center">{`${fromAmount} ${
+                fromAsset?.id
+              } for ${toAmount.toFixed(8)} ${toAsset?.id}`}</p>
             </div>
           </Animate>
         );
@@ -267,9 +335,16 @@ export function SwapWidgetConfirm({
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <LabeledInput id="payoutAddress" inputKey="payoutAddress" type="text" {...field}>
+                            <LabeledInput
+                              id="payoutAddress"
+                              inputKey="payoutAddress"
+                              type="text"
+                              {...field}
+                            >
                               <div className="flex gap-2 items-center">
-                                <FormLabel className=" text-xs">Payout Address</FormLabel>
+                                <FormLabel className=" text-xs">
+                                  Payout Address
+                                </FormLabel>
                               </div>
                             </LabeledInput>
                           </FormControl>
@@ -283,9 +358,16 @@ export function SwapWidgetConfirm({
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <LabeledInput id="refundAddress" inputKey="refundAddress" type="text" {...field}>
+                            <LabeledInput
+                              id="refundAddress"
+                              inputKey="refundAddress"
+                              type="text"
+                              {...field}
+                            >
                               <div className="flex gap-2 items-center">
-                                <FormLabel className=" text-xs">Refund Address</FormLabel>
+                                <FormLabel className=" text-xs">
+                                  Refund Address
+                                </FormLabel>
                               </div>
                             </LabeledInput>
                           </FormControl>
@@ -299,9 +381,16 @@ export function SwapWidgetConfirm({
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <LabeledInput id="emailAddress" inputKey="emailAddress" type="text" {...field}>
+                            <LabeledInput
+                              id="emailAddress"
+                              inputKey="emailAddress"
+                              type="text"
+                              {...field}
+                            >
                               <div className="flex gap-1 items-center">
-                                <FormLabel className="text-xs">Email Address</FormLabel>
+                                <FormLabel className="text-xs">
+                                  Email Address
+                                </FormLabel>
                               </div>
                             </LabeledInput>
                           </FormControl>
@@ -334,7 +423,9 @@ export function SwapWidgetConfirm({
               <CardDescription className="text-muted-foreground font-normal">
                 {order
                   ? `${formatDate(new Date(order.createdAt))}`
-                  : `${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(2)} ${toAsset?.id}`}
+                  : `${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(
+                      2
+                    )} ${toAsset?.id}`}
               </CardDescription>
             </CardTitle>
           </div>
@@ -348,23 +439,32 @@ export function SwapWidgetConfirm({
         } md:gap-3 pb-0 gap-6`}
       >
         <AnimatePresence mode="wait">{renderPanel()}</AnimatePresence>
-        {swapStage !== SwapStageEvent.Pending && swapStage !== SwapStageEvent.Complete && (
-          <span className="hidden md:block" />
-        )}
+        {swapStage !== SwapStageEvent.Pending &&
+          swapStage !== SwapStageEvent.Complete && (
+            <span className="hidden md:block" />
+          )}
         <div
           className={`${
-            (swapStage === SwapStageEvent.Pending || order.status === OrderStatus.Complete) && `hidden`
+            (swapStage === SwapStageEvent.Pending ||
+              order.status === OrderStatus.Complete) &&
+            `hidden`
           } flex flex-col justify-center`}
         >
           {swapEvents.slice(0, 4).map((notification, index) => (
-            <div key={index} className="mb-2 grid grid-cols-[20px_1fr] items-start last:pb-0">
+            <div
+              key={index}
+              className="mb-2 grid grid-cols-[20px_1fr] items-start last:pb-0"
+            >
               <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
               <div className="space-y-1">
                 <div className="text-sm font-medium leading-none">
-                  {notification.title || <Skeleton className="w-full h-[20px] rounded-full" />}
+                  {notification.title || (
+                    <Skeleton className="w-full h-[20px] rounded-full" />
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {(notification.time && new Date(notification.time).toLocaleString()) || (
+                  {(notification.time &&
+                    new Date(notification.time).toLocaleString()) || (
                     <Skeleton className="w-[100px] h-[20px] rounded-full" />
                   )}
                 </div>
@@ -379,7 +479,9 @@ export function SwapWidgetConfirm({
           <BellRing />
           <div className="flex-1 space-y-1">
             <p className="text-sm font-medium leading-none">Alerts</p>
-            <p className="text-sm text-muted-foreground">Notify me when there&#39;s an update with my exchange.</p>
+            <p className="text-sm text-muted-foreground">
+              Notify me when there&#39;s an update with my exchange.
+            </p>
           </div>
           <Switch checked />
         </div>
@@ -400,12 +502,22 @@ export function SwapWidgetConfirm({
             </Button>
           </SwapWidgetDepositDialog>
         )}
-        {![SwapStageEvent.WaitingForDeposit, SwapStageEvent.WaitingForProvider].includes(swapStage) ? (
-          <Button type="submit" form="customerForm" className="w-full mt-4" disabled={buttonDisabled}>
+        {![
+          SwapStageEvent.WaitingForDeposit,
+          SwapStageEvent.WaitingForProvider,
+        ].includes(swapStage) ? (
+          <Button
+            type="submit"
+            form="customerForm"
+            className="w-full mt-4"
+            disabled={buttonDisabled}
+          >
             {buttonDisabled ? (
               <>
                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                {swapStage === SwapStageEvent.WaitingForDeposit ? "Verifying deposit..." : "Placing swap..."}
+                {swapStage === SwapStageEvent.WaitingForDeposit
+                  ? "Verifying deposit..."
+                  : "Placing swap..."}
               </>
             ) : (
               <>

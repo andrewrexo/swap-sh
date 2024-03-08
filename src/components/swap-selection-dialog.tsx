@@ -68,6 +68,14 @@ export function SwapSelectionDialog({
   }, [selectedAsset]);
 
   useEffect(() => {
+    const asset = direction === "from" ? fromAsset : toAsset;
+
+    if (asset != selectedAsset) {
+      setSelectedAsset(asset);
+    }
+  }, [fromAsset, toAsset]);
+
+  useEffect(() => {
     amountCallback(inputValue, direction);
   }, [inputValue]);
 
@@ -105,11 +113,11 @@ export function SwapSelectionDialog({
             type="number"
             placeholder="0.00000000"
             className="max-w-44"
-            defaultValue={direction === "from" ? fromAmount : toAmount}
+            value={direction === "from" ? fromAmount : toAmount}
             required
             disabled={disabled}
             onChange={(e) => {
-              setInputValue(parseFloat(e.target.value));
+              setInputValue(e.target.value);
             }}
             onKeyDown={(e) => {
               if (e.key === "-") {
