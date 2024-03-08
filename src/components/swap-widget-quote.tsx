@@ -16,10 +16,8 @@ import {
 } from "./ui/card";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "./ui/loading-spinner";
-import { Button } from "./ui/button";
 import { ArrowDownUpIcon } from "lucide-react";
-import { motion, useAnimationControls } from "framer-motion";
-import { Animate } from "./ui/animate";
+import { motion } from "framer-motion";
 
 export function SwapWidgetQuote({
   assets,
@@ -52,9 +50,7 @@ export function SwapWidgetQuote({
   minimumCallback: (amount: number) => void;
   maximumCallback: (amount: number) => void;
 }) {
-  const controls = useAnimationControls();
   const [isAnimating, setIsAnimating] = useState(false);
-
   const [limitWarning, setLimitWarning] = useState<{
     active: boolean;
     size: "maximum" | "minimum" | "";
@@ -101,26 +97,33 @@ export function SwapWidgetQuote({
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-8 items-center">
-        <Animate
-          animateKey="swap-quote-switch"
-          className="flex flex-col gap-1 items-center"
-        >
+        <div className="flex flex-col gap-1 items-center">
           <motion.div
             className="flex items-center justify-between gap-2"
-            animate={isAnimating ? { y: 100 } : {}}
+            animate={
+              isAnimating
+                ? {
+                    y: 100,
+                    transitionEnd: {
+                      y: 0,
+                    },
+                    transition: {
+                      duration: 0.15,
+                      type: "tween",
+                    },
+                  }
+                : {}
+            }
             onAnimationComplete={() => {
               if (isAnimating) {
-                const fromAssetOld = fromAsset;
-                const toAssetOld = toAsset;
+                setIsAnimating(false);
 
-                amountCallback(toAmount, "from");
-                amountCallback(fromAmount, "to");
-                assetCallback(toAssetOld, "from");
-                assetCallback(fromAssetOld, "to");
+                assetCallback(toAsset, "from");
+                assetCallback(fromAsset, "to");
                 minimumCallback(0);
                 maximumCallback(100000);
-
-                setIsAnimating(false);
+                amountCallback(toAmount, "from");
+                amountCallback(fromAmount, "to");
               }
             }}
           >
@@ -143,19 +146,43 @@ export function SwapWidgetQuote({
           </motion.div>
           <motion.div
             className="flex justify-center w-fit mt-2 hover:cursor-pointer"
-            onClick={() => setIsAnimating(true)}
+            onClick={() => {
+              if (!isAnimating) setIsAnimating(true);
+            }}
             animate={
-              isAnimating ? { rotate: 360, transition: { duration: 0.5 } } : {}
+              isAnimating
+                ? {
+                    rotate: 180,
+                    transition: {
+                      duration: 0.15,
+                    },
+                    transitionEnd: { rotate: 0 },
+                  }
+                : {}
             }
-            onAnimationComplete={() => setIsAnimating(false)}
           >
             <ArrowDownUpIcon className="w-6 h-6 text-primary hover:cursor-pointer" />
           </motion.div>
           <motion.div
             className="flex items-center justify-between w-full"
-            animate={isAnimating ? { y: -100 } : {}}
+            animate={
+              isAnimating
+                ? {
+                    y: -100,
+                    transitionEnd: {
+                      y: 0,
+                    },
+                    transition: {
+                      duration: 0.15,
+                      type: "tween",
+                    },
+                  }
+                : {}
+            }
             onAnimationComplete={() => {
-              setIsAnimating(false);
+              if (isAnimating) {
+                setIsAnimating(false);
+              }
             }}
           >
             <SwapSelectionDialog
@@ -175,7 +202,7 @@ export function SwapWidgetQuote({
               to
             </SwapSelectionDialog>
           </motion.div>
-        </Animate>
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-y-6">
         {limitWarning.active && minimum != 0 ? (
