@@ -117,7 +117,7 @@ export function SwapSelectionDialog({
             required
             disabled={disabled}
             onChange={(e) => {
-              setInputValue(e.target.value);
+              setInputValue(parseFloat(e.target.value));
             }}
             onKeyDown={(e) => {
               if (e.key === "-") {
