@@ -105,14 +105,20 @@ export function SwapSelectionDialog({
             type="number"
             placeholder="0.00000000"
             className="max-w-44"
-            value={
-              direction === "from" ? fromAmount.toString() : toAmount.toString()
-            }
+            defaultValue={direction === "from" ? fromAmount : toAmount}
             required
             disabled={disabled}
             onChange={(e) => {
-              if (!Number.isNaN(e.target.value)) {
-                setInputValue(parseFloat(e.target.value));
+              setInputValue(parseFloat(e.target.value));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "-") {
+                e.preventDefault();
+              }
+
+              if (e.key === "." && inputValue != 0 && !inputValue) {
+                console.log(inputValue.toString());
+                e.preventDefault();
               }
             }}
           />
@@ -129,27 +135,37 @@ export function SwapSelectionDialog({
             const networkKey = network[0];
             const networkAssets = network[1];
 
+            if (
+              networkAssets.length === 1 &&
+              (networkAssets[0] === fromAsset || networkAssets[0] === toAsset)
+            )
+              return null;
+
             return (
               <CommandGroup heading={networkKey} key={networkKey}>
-                {networkAssets.map((asset) => (
-                  <CommandItem
-                    key={`${asset.id}-${asset.network}`}
-                    value={`${asset.id}-${asset.network}`}
-                    onSelect={(value) => {
-                      setSelectedAsset(asset);
-                      setOpen(false);
-                    }}
-                    className="gap-1"
-                  >
-                    <TargetIcon
-                      className={`${networkToColorMap.get(asset.network)}`}
-                    />
-                    {`${asset.name} (${asset.symbol})`}
-                    <CommandShortcut>
-                      ${asset.pricing && asset.pricing[currency]}
-                    </CommandShortcut>
-                  </CommandItem>
-                ))}
+                {networkAssets.map((asset) => {
+                  if (asset === fromAsset || asset === toAsset) return null;
+
+                  return (
+                    <CommandItem
+                      key={`${asset.id}-${asset.network}`}
+                      value={`${asset.id}-${asset.network}`}
+                      onSelect={(value) => {
+                        setSelectedAsset(asset);
+                        setOpen(false);
+                      }}
+                      className="gap-1"
+                    >
+                      <TargetIcon
+                        className={`${networkToColorMap.get(asset.network)}`}
+                      />
+                      {`${asset.name} (${asset.symbol})`}
+                      <CommandShortcut>
+                        ${asset.pricing && asset.pricing[currency]}
+                      </CommandShortcut>
+                    </CommandItem>
+                  );
+                })}
               </CommandGroup>
             );
           })}
