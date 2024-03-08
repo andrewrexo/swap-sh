@@ -236,12 +236,18 @@ export function SwapWidgetConfirm({
             animateKey="swap-show-progress"
             className="flex flex-col gap-8 md:gap-4 items-center"
           >
-            <h1 className="font-semibold text-primary text-center text-lg">
+            <h1
+              className={`font-semibold text-primary text-center text-md ${
+                order.status === OrderStatus.Complete
+                  ? `text-primary`
+                  : `text-secondary-foreground`
+              }`}
+            >
               {order.status === OrderStatus.Complete
                 ? `Your swap is complete!`
                 : `Your swap is in progress, the provider will send your funds shortly.`}
             </h1>
-            <div className="flex gap-8 items-center bg-secondary py-8 px-4">
+            <div className="flex gap-8 items-center bg-secondary py-6 px-4">
               <div className="flex flex-col items-center gap-1 bg-secondary p-2 rounded-[0.5rem] min-w-20">
                 <Image
                   width={48}
@@ -287,15 +293,17 @@ export function SwapWidgetConfirm({
                 <p className="text-xs text-primary font-medium">{`${toAmount}`}</p>
               </div>
             </div>
-            <a
-              className="text-muted-foreground break-words text-xs max-w-[350px]"
-              href={`${networkBlockExplorerMap.get(toAsset.network)}${
-                order.toTransactionId
-              }`}
-              target="_blank"
-            >
-              {order.toTransactionId.substring(0, 32) + `...`}
-            </a>
+            {order.status === OrderStatus.Complete && (
+              <a
+                className="text-muted-foreground break-words text-xs max-w-[350px]"
+                href={`${networkBlockExplorerMap.get(toAsset.network)}${
+                  order.toTransactionId
+                }`}
+                target="_blank"
+              >
+                {order.toTransactionId.substring(0, 32) + `...`}
+              </a>
+            )}
             <p className="text-xs break-words text-center mt-auto">
               If you have any issues with your swap, please contact us with your
               Order ID.
