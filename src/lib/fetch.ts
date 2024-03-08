@@ -40,11 +40,13 @@ export const prepareRequest = (
 export const preparePostRequest = (
   endpoint: string,
   method: "POST" | "PATCH",
-  body?: ExodusOrder | ExodusOrderUpdate
+  body?: ExodusOrder | ExodusOrderUpdate,
+  ip?: string
 ) => {
   const url = new URL(`${exodusV3Url}/${endpoint}`);
 
   const headers = new Headers({
+    Forwarded: `for=${ip}`,
     "Content-Type": "application/json",
     "App-Name": `${config.appName}`,
     "App-Version": `${config.appVersion}`,

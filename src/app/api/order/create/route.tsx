@@ -1,13 +1,19 @@
 import { SwapError, SwapErrorType } from "@/lib/errors";
 import { preparePostRequest } from "@/lib/fetch";
 import { ExodusOrder } from "@/lib/swap/order";
+import { NextRequest } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const orderParams: ExodusOrder = await req.json();
     console.error({ orderParams });
     const response = await fetch(
-      preparePostRequest("orders", "POST", orderParams)
+      preparePostRequest(
+        "orders",
+        "POST",
+        orderParams,
+        req.headers.get("X-Forwarded-For")
+      )
     );
     const json = await response.json();
 
