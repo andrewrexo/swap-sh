@@ -4,7 +4,7 @@ const config = {
   appVersion: "1.0.0",
 };
 
-export const exodusV3Url = "https://exchange.exodus.io/v3";
+export const exodusV3Url = "https://exchange-s.exodus.io/v3";
 export const exodusPricingServerUrl = "https://pricing.a.exodus.io";
 
 export const baseUrl =
