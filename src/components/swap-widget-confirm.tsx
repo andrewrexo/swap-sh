@@ -241,18 +241,16 @@ export function SwapWidgetConfirm({
                 ? `Your swap is complete!`
                 : `Your swap is in progress, the provider will send your funds shortly.`}
             </h1>
-            <div className="flex gap-8 items-center">
-              <div className="flex flex-col items-center gap-1">
-                <div className="border-4 rounded-md bg-secondary">
-                  <Image
-                    width={48}
-                    height={48}
-                    src={fromAsset.logo ?? ""}
-                    alt={fromAsset.symbol}
-                    className="h-fit w-fit rounded-3xl"
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground font-medium">{`${fromAsset.id}`}</p>
+            <div className="flex gap-8 items-center bg-secondary py-8 px-4">
+              <div className="flex flex-col items-center gap-1 bg-secondary p-2 rounded-[0.5rem] min-w-20">
+                <Image
+                  width={48}
+                  height={48}
+                  src={fromAsset.logo ?? ""}
+                  alt={fromAsset.symbol}
+                  className="h-fit w-fit rounded-3xl"
+                />
+                <p className="text-sm text-secondary-foreground font-medium">{`${fromAsset.id}`}</p>
                 <p className="text-xs text-primary font-medium">{`${fromAmount}`}</p>
               </div>
               <motion.div
@@ -273,8 +271,8 @@ export function SwapWidgetConfirm({
               >
                 <ArrowLeftRightIcon className="text-primary md:w-8 md:h-8 sm:w-4 sm:w-4" />
               </motion.div>
-              <div className="flex flex-col items-center gap-1">
-                <div className="border-4 rounded-md bg-secondary">
+              <div className="flex flex-col items-center gap-1 min-w-16 bg-secondary p-2 rounded-[0.5rem]">
+                <div className="rounded-md">
                   <Image
                     width={48}
                     height={48}
@@ -283,7 +281,7 @@ export function SwapWidgetConfirm({
                     className="rounded-md h-fit w-fit"
                   />
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">{`${toAsset.id}`}</p>
+                <p className="text-sm text-secondary-foreground font-medium">{`${toAsset.id}`}</p>
                 <p className="text-xs text-primary font-medium">{`${toAmount}`}</p>
               </div>
             </div>
