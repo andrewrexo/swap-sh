@@ -24,7 +24,7 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
   const [minimum, setMinimum] = useState<number>(0);
   const [maximum, setMaximum] = useState<number>(0);
   const [order, setOrder] = useState<ExodusOrderResponse>();
-  const [fromAmount, setFromAmount] = useState<number>(1);
+  const [fromAmount, setFromAmount] = useState<number>(1.5);
   const [toAmount, setToAmount] = useState<number>(0);
   const [fromAsset, setFromAsset] = useState<Asset | undefined>(
     assets.solana.find((asset) => asset.id === "SOL")
@@ -78,7 +78,6 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
         if (value.length > 0) {
           const lastRate = value.shift();
           setExchangeRate(lastRate);
-          setFromAmount(lastRate.min.value * 1.05);
           setMinimum(lastRate.min.value * 1.03);
           setMaximum(lastRate.max.value * 0.97);
         } else {

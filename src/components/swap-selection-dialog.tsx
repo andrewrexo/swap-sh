@@ -52,7 +52,7 @@ export function SwapSelectionDialog({
   amountCallback: (amount: number, direction: SwapDirection) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(1);
+  const [inputValue, setInputValue] = useState(1.5);
   const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(
     direction === "from" ? fromAsset : toAsset
   );
