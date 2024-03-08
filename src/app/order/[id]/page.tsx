@@ -2,22 +2,40 @@
 import { SwapWidgetConfirm } from "@/components/swap-widget-confirm";
 import { Animate } from "@/components/ui/animate";
 import { getAssetsFromExodusByNetwork } from "@/lib/swap/assets";
-import { SwapStageEvent, getExodusOrder, getProviderOrder } from "@/lib/swap/order";
+import {
+  SwapStageEvent,
+  getExodusOrder,
+  getProviderOrder,
+} from "@/lib/swap/order";
 import { AssetNetwork } from "@/lib/swap/types";
 import { findBalanceFromProvider } from "@/lib/swap/utils";
 import { notFound } from "next/navigation";
 
-export default async function OrderPage({ params }: { params: { id: string } }) {
+export default async function OrderPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id } = params;
   const order = await getExodusOrder(id);
+
+  console.log(order);
 
   if (!order) {
     notFound();
   }
 
   const providerOrder = await getProviderOrder(id);
+
+  if (!providerOrder || providerOrder.status === 500) {
+    notFound();
+  }
+
   const [from, to] = order.pairId.split("_");
-  const assets = await getAssetsFromExodusByNetwork([AssetNetwork.Ethereum, AssetNetwork.Solana]);
+  const assets = await getAssetsFromExodusByNetwork([
+    AssetNetwork.Ethereum,
+    AssetNetwork.Solana,
+  ]);
   const flatAssets = Object.values(assets).flatMap((element) => [...element]);
   const fromAsset = flatAssets.find((asset) => asset.id === from);
   const toAsset = flatAssets.find((asset) => asset.id === to);

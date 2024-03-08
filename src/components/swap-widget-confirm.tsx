@@ -241,45 +241,50 @@ export function SwapWidgetConfirm({
                 ? `Your swap is complete!`
                 : `Your swap is in progress, the provider will send your funds shortly.`}
             </h1>
-            <div className="flex gap-2, items-center">
+            <div className="flex gap-8 items-center">
               <div className="flex flex-col items-center gap-1">
-                <Image
-                  width={48}
-                  height={48}
-                  src={fromAsset.logo ?? ""}
-                  alt={fromAsset.symbol}
-                  className="w-10 h-10"
-                />
-                <p className="text-xs">{`${fromAmount} ${fromAsset.id}`}</p>
+                <div className="border-4 rounded-md bg-secondary">
+                  <Image
+                    width={48}
+                    height={48}
+                    src={fromAsset.logo ?? ""}
+                    alt={fromAsset.symbol}
+                    className="h-fit w-fit rounded-3xl"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">{`${fromAsset.id}`}</p>
+                <p className="text-xs text-primary font-medium">{`${fromAmount}`}</p>
               </div>
               <motion.div
-                className="mb-5"
                 initial={{
                   scale: 1,
                 }}
                 animate={{
                   rotate: 180,
-                  scale: [1.2, 1],
                 }}
                 transition={{
-                  delay: 1.0,
+                  delay: 0.5,
                   type: "spring",
-                  stiffness: 100,
-                  duration: 0.75,
-                  times: [0, 0.5, 1],
+                  stiffness: 90,
+                  duration: 2,
+                  times: [0, 1, 1],
+                  repeat: 2,
                 }}
               >
-                <ArrowLeftRightIcon className="text-primary w-7 h-7" />
+                <ArrowLeftRightIcon className="text-primary md:w-8 md:h-8 sm:w-4 sm:w-4" />
               </motion.div>
               <div className="flex flex-col items-center gap-1">
-                <Image
-                  width={24}
-                  height={24}
-                  src={toAsset.logo ?? ""}
-                  alt={toAsset.symbol}
-                  className="w-10 h-10"
-                />
-                <p className="text-xs">{`${toAmount} ${toAsset.id}`}</p>
+                <div className="border-4 rounded-md bg-secondary">
+                  <Image
+                    width={48}
+                    height={48}
+                    src={toAsset.logo ?? ""}
+                    alt={toAsset.symbol}
+                    className="rounded-md h-fit w-fit"
+                  />
+                </div>
+                <p className="text-sm text-muted-foreground font-medium">{`${toAsset.id}`}</p>
+                <p className="text-xs text-primary font-medium">{`${toAmount}`}</p>
               </div>
             </div>
             <a
@@ -327,55 +332,64 @@ export function SwapWidgetConfirm({
           <Animate
             animateKey="swap-form"
             initial={false}
-            className="flex flex-col"
+            className="flex flex-col gap-6 items-center"
           >
-            <div className="flex gap-12 items-center w-full justify-center">
-              <div className="flex flex-col items-center">
-                <div className="border-4 rounded-md bg-secondary rounded-md">
+            <div className="flex gap-4 items-center w-5/6 justify-between">
+              <div className="flex flex-col items-center gap-1">
+                <div className="border-4 rounded-md bg-secondary">
                   <Image
                     width={48}
                     height={48}
                     src={fromAsset.logo ?? ""}
                     alt={fromAsset.symbol}
-                    className="w-10 h-10 rounded-md"
+                    className="h-fit w-fit rounded-3xl"
                   />
                 </div>
-                <p className="text-xs">{`${fromAsset.id}`}</p>
+                <p className="text-sm text-muted-foreground font-medium">{`${fromAsset.id}`}</p>
+                <p className="text-xs text-primary font-medium">{`${fromAmount.toFixed(
+                  2
+                )}`}</p>
               </div>
               <motion.div
-                className="mb-5"
                 initial={{
                   scale: 1,
                 }}
                 animate={{
                   rotate: 180,
-                  scale: [1.2, 1],
                 }}
                 transition={{
-                  delay: 1.0,
+                  delay: 0.5,
                   type: "spring",
-                  stiffness: 100,
-                  duration: 0.75,
-                  times: [0, 0.5, 1],
+                  stiffness: 90,
+                  duration: 2,
+                  times: [0, 1, 1],
+                  repeat: 2,
                 }}
               >
-                <ArrowLeftRightIcon className="text-primary w-7 h-7" />
+                <ArrowLeftRightIcon className="text-primary md:w-8 md:h-8 sm:w-4 sm:w-4" />
               </motion.div>
               <div className="flex flex-col items-center gap-1">
-                <div className="border-4 rounded-md bg-secondary rounded-md">
+                <div className="border-4 rounded-md bg-secondary">
                   <Image
                     width={48}
                     height={48}
                     src={toAsset.logo ?? ""}
                     alt={toAsset.symbol}
-                    className="w-10 h-10 rounded-md"
+                    className="rounded-md h-fit w-fit"
                   />
                 </div>
-                <p className="text-xs">{`${toAsset.id}`}</p>
+                <p className="text-sm text-muted-foreground font-medium">{`${toAsset.id}`}</p>
+                <p className="text-xs text-primary font-medium">{`${toAmount.toFixed(
+                  2
+                )}`}</p>
               </div>
             </div>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} id="customerForm">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                id="customerForm"
+                className="w-full h-full pt-2"
+              >
                 <div className="w-full h-full pt-2">
                   <div className="flex flex-col space-y-8 [&>*:first-child]:mt-2">
                     <FormField
@@ -383,15 +397,16 @@ export function SwapWidgetConfirm({
                       name="payoutAddress"
                       render={({ field }) => (
                         <FormItem>
-                          <FormControl>
+                          <FormControl className="">
                             <LabeledInput
                               id="payoutAddress"
                               inputKey="payoutAddress"
                               type="text"
+                              className=""
                               {...field}
                             >
                               <div className="flex gap-2 items-center">
-                                <FormLabel className=" text-xs">
+                                <FormLabel className="text-xs text-muted-foreground">
                                   Payout Address
                                 </FormLabel>
                               </div>
@@ -414,7 +429,7 @@ export function SwapWidgetConfirm({
                               {...field}
                             >
                               <div className="flex gap-2 items-center">
-                                <FormLabel className=" text-xs">
+                                <FormLabel className="text-xs text-muted-foreground">
                                   Refund Address
                                 </FormLabel>
                               </div>
@@ -437,7 +452,7 @@ export function SwapWidgetConfirm({
                               {...field}
                             >
                               <div className="flex gap-1 items-center">
-                                <FormLabel className="text-xs">
+                                <FormLabel className="text-xs text-muted-foreground">
                                   Email Address
                                 </FormLabel>
                               </div>
@@ -451,7 +466,7 @@ export function SwapWidgetConfirm({
                 </div>
               </form>
             </Form>
-            <p className="text-xs text-center mt-6 md:mb-0 mb-1 md:mt-6 text-muted-foreground">
+            <p className="text-xs text-center mt-2 md:mb-0 mb-1 md:mt-2 text-muted-foreground">
               Please verify your information before initiating an exchange.
             </p>
           </Animate>
@@ -465,16 +480,12 @@ export function SwapWidgetConfirm({
       <CardHeader className="flex justify-between flex-col gap-4 pb-3 p-5">
         <div className="flex justify-between">
           <div className="flex flex-col">
-            <p className="text-lg font-semibold">Swap</p>
+            <p className="text-lg font-semibold text-primary">Swap</p>
           </div>
           <div className="flex flex-col text-right pt-[6px]">
             <CardTitle className="text-primary">
-              <CardDescription className="text-muted-foreground font-normal">
-                {order
-                  ? `${formatDate(new Date(order.createdAt))}`
-                  : `${fromAmount} ${fromAsset?.id} for ${toAmount.toFixed(
-                      2
-                    )} ${toAsset?.id}`}
+              <CardDescription className="text-xs">
+                {order ? `${formatDate(new Date(order.createdAt))}` : ``}
               </CardDescription>
             </CardTitle>
           </div>

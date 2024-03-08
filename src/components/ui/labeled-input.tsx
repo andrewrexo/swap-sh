@@ -26,7 +26,7 @@ const LabeledInput = React.forwardRef<
       <AnimatePresence>
         <motion.div
           key={inputKey}
-          initial={{ opacity: 0.75, x: -14, y: -20 }}
+          initial={{ opacity: 1, x: -14, y: -20 }}
           exit={{ opacity: 0 }}
           className={`absolute pointer-events-none`}
         >
@@ -35,7 +35,10 @@ const LabeledInput = React.forwardRef<
       </AnimatePresence>
       <input
         type={type}
-        className={cn("h-full bg-transparent focus:border-none focus:outline-none text-sm", className)}
+        className={cn(
+          "h-full bg-transparent focus:border-none focus:outline-none text-sm",
+          className
+        )}
         {...props}
         ref={inputRef}
       />
