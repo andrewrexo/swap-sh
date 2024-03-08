@@ -84,6 +84,12 @@ export function SwapWidgetQuote({
     }
   }, [fromAmount, minimum, maximum]);
 
+  useEffect(() => {
+    if (isAnimating) {
+      amountCallback(fromAmount, "to");
+    }
+  }, [isAnimating]);
+
   const onSetMaximum = () => {
     amountCallback(maximum, "from");
   };
@@ -132,7 +138,6 @@ export function SwapWidgetQuote({
                 minimumCallback(0);
                 maximumCallback(100000);
                 amountCallback(toAmount, "from");
-                amountCallback(fromAmount, "to");
               }
             }}
           >
