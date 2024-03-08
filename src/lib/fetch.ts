@@ -7,13 +7,13 @@ export interface ExodusRequestParams {
   value: any;
 }
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export const prepareRequest = (
   endpoint: string,
   method: "GET" | "POST" | "PATCH",
   params?: ExodusRequestParams[],
-  ip?: string,
+  ip?: string
 ) => {
   const url = new URL(`${exodusV3Url}/${endpoint}`);
 
@@ -24,7 +24,7 @@ export const prepareRequest = (
   }
 
   const headers = new Headers({
-    "X-Forwarded-For": `${ip}`,
+    Forwarded: `for=${ip}`,
     "Content-Type": "application/json",
     "App-Name": `${config.appName}`,
     "App-Version": `${config.appVersion}`,
@@ -33,7 +33,7 @@ export const prepareRequest = (
   return new Request(url, {
     headers,
     method,
-    cache: 'no-store',
+    cache: "no-store",
   });
 };
 
