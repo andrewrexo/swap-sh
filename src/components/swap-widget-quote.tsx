@@ -16,6 +16,7 @@ import {
 } from "./ui/card";
 import { SwapWidgetSettingsDialog } from "./swap-widget-settings-dialog";
 import { useEffect, useState } from "react";
+import { LoadingSpinner } from "./ui/loading-spinner";
 
 export function SwapWidgetQuote({
   assets,
@@ -26,6 +27,7 @@ export function SwapWidgetQuote({
   maximum,
   fromAsset,
   toAsset,
+  exchangeRate,
   buttonCallback,
   assetCallback,
   amountCallback,
@@ -39,6 +41,7 @@ export function SwapWidgetQuote({
   maximum: number;
   fromAsset: Asset | undefined;
   toAsset: Asset | undefined;
+  exchangeRate: any;
   assetCallback: (asset: Asset, direction: SwapDirection) => void;
   amountCallback: (amount: number, direction: SwapDirection) => void;
 }) {
@@ -51,7 +54,12 @@ export function SwapWidgetQuote({
   });
 
   useEffect(() => {
-    if (fromAmount >= maximum) {
+    if (fromAmount == 0 || !fromAmount) {
+      setLimitWarning({
+        active: false,
+        size: "",
+      });
+    } else if (fromAmount >= maximum) {
       setLimitWarning({
         active: true,
         size: "maximum",
@@ -67,8 +75,6 @@ export function SwapWidgetQuote({
         size: "",
       });
     }
-
-    console.log({ minimum, maximum });
   }, [fromAmount, minimum, maximum]);
 
   return (
@@ -79,7 +85,9 @@ export function SwapWidgetQuote({
           <CardDescription>rapid swaps, low fees. no b.s.</CardDescription>
         </div>
         <div className="mt-0">
-          <SwapWidgetSettingsDialog />
+          {exchangeRate.pairId === `${fromAsset.id}_${toAsset.id}` ? null : (
+            <LoadingSpinner />
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
@@ -93,6 +101,7 @@ export function SwapWidgetQuote({
             toAmount={toAmount}
             minimum={minimum}
             maximum={maximum}
+            disabled={!exchangeRate}
             assetCallback={assetCallback}
             amountCallback={amountCallback}
             direction="from"

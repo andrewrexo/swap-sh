@@ -75,11 +75,17 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
       const rates = getRateForPair(fromAsset.id, toAsset.id);
 
       rates.then((value) => {
-        const lastRate = value.pop();
-        setExchangeRate(lastRate);
-        setFromAmount(lastRate.min.value * 1.05);
-        setMinimum(lastRate.min.value * 1.03);
-        setMaximum(lastRate.max.value * 0.97);
+        if (value.length > 0) {
+          const lastRate = value.shift();
+          setExchangeRate(lastRate);
+          setFromAmount(lastRate.min.value * 1.05);
+          setMinimum(lastRate.min.value * 1.03);
+          setMaximum(lastRate.max.value * 0.97);
+        } else {
+          setExchangeRate(0);
+          setMinimum(0);
+          setMaximum(0);
+        }
       });
     }
   }, [fromAsset, toAsset]);
@@ -93,10 +99,14 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
         ).toFixed(8)
       );
 
-      setToAmount(toAmount);
+      if (toAmount < 0) {
+        setToAmount(0);
+      } else {
+        setToAmount(toAmount);
+      }
     }
 
-    if (fromAmount === 0) {
+    if (fromAmount === 0 || fromAmount.toString() == "") {
       setToAmount(0);
     }
   }, [fromAmount, exchangeRate]);
@@ -124,6 +134,7 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
               toAmount={toAmount}
               fromAsset={fromAsset}
               toAsset={toAsset}
+              exchangeRate={exchangeRate}
               assetCallback={handleAssetChange}
               amountCallback={handleAmountChange}
             />
