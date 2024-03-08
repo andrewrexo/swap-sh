@@ -324,7 +324,56 @@ export function SwapWidgetConfirm({
       }
       case SwapStageEvent.Pending: {
         return (
-          <Animate animateKey="swap-form" initial={false}>
+          <Animate
+            animateKey="swap-form"
+            initial={false}
+            className="flex flex-col"
+          >
+            <div className="flex gap-12 items-center w-full justify-center">
+              <div className="flex flex-col items-center">
+                <div className="border-4 rounded-md bg-secondary rounded-md">
+                  <Image
+                    width={48}
+                    height={48}
+                    src={fromAsset.logo ?? ""}
+                    alt={fromAsset.symbol}
+                    className="w-10 h-10 rounded-md"
+                  />
+                </div>
+                <p className="text-xs">{`${fromAsset.id}`}</p>
+              </div>
+              <motion.div
+                className="mb-5"
+                initial={{
+                  scale: 1,
+                }}
+                animate={{
+                  rotate: 180,
+                  scale: [1.2, 1],
+                }}
+                transition={{
+                  delay: 1.0,
+                  type: "spring",
+                  stiffness: 100,
+                  duration: 0.75,
+                  times: [0, 0.5, 1],
+                }}
+              >
+                <ArrowLeftRightIcon className="text-primary w-7 h-7" />
+              </motion.div>
+              <div className="flex flex-col items-center gap-1">
+                <div className="border-4 rounded-md bg-secondary rounded-md">
+                  <Image
+                    width={48}
+                    height={48}
+                    src={toAsset.logo ?? ""}
+                    alt={toAsset.symbol}
+                    className="w-10 h-10 rounded-md"
+                  />
+                </div>
+                <p className="text-xs">{`${toAsset.id}`}</p>
+              </div>
+            </div>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} id="customerForm">
                 <div className="w-full h-full pt-2">
