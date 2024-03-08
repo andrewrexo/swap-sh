@@ -117,7 +117,6 @@ export function SwapSelectionDialog({
               }
 
               if (e.key === "." && inputValue != 0 && !inputValue) {
-                console.log(inputValue.toString());
                 e.preventDefault();
               }
             }}
