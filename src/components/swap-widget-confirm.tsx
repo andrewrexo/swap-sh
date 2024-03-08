@@ -234,7 +234,7 @@ export function SwapWidgetConfirm({
         return (
           <Animate
             animateKey="swap-show-progress"
-            className="flex flex-col h-full w-full gap-8 md:gap-4 items-center"
+            className="flex flex-col gap-8 md:gap-4 items-center"
           >
             <h1 className="font-semibold text-primary text-center text-lg">
               {order.status === OrderStatus.Complete
@@ -250,27 +250,29 @@ export function SwapWidgetConfirm({
                   alt={fromAsset.symbol}
                   className="h-fit w-fit rounded-3xl"
                 />
-                <p className="text-sm text-secondary-foreground font-medium">{`${fromAsset.id}`}</p>
+                <p className="text-sm text-secondary-foreground font-medium">{`${fromAsset.symbol}`}</p>
                 <p className="text-xs text-primary font-medium">{`${fromAmount}`}</p>
               </div>
-              <motion.div
-                initial={{
-                  scale: 1,
-                }}
-                animate={{
-                  rotate: 180,
-                }}
-                transition={{
-                  delay: 0.5,
-                  type: "spring",
-                  stiffness: 90,
-                  duration: 2,
-                  times: [0, 1, 1],
-                  repeat: 2,
-                }}
-              >
-                <ArrowLeftRightIcon className="text-primary md:w-8 md:h-8 sm:w-4 sm:w-4" />
-              </motion.div>
+              <div className="text-center flex flex-col items-center gap-2">
+                <motion.div
+                  initial={{
+                    scale: 1,
+                  }}
+                  animate={{
+                    rotate: 180,
+                  }}
+                  transition={{
+                    delay: 0.5,
+                    type: "spring",
+                    stiffness: 90,
+                    duration: 2,
+                    times: [0, 1, 1],
+                    repeat: 2,
+                  }}
+                >
+                  <ArrowLeftRightIcon className="text-primary md:w-8 md:h-8 sm:w-4 sm:w-4" />
+                </motion.div>
+              </div>
               <div className="flex flex-col items-center gap-1 min-w-16 bg-secondary p-2 rounded-[0.5rem]">
                 <div className="rounded-md">
                   <Image
@@ -281,18 +283,18 @@ export function SwapWidgetConfirm({
                     className="rounded-md h-fit w-fit"
                   />
                 </div>
-                <p className="text-sm text-secondary-foreground font-medium">{`${toAsset.id}`}</p>
+                <p className="text-sm text-secondary-foreground font-medium">{`${toAsset.symbol}`}</p>
                 <p className="text-xs text-primary font-medium">{`${toAmount}`}</p>
               </div>
             </div>
             <a
-              className="text-muted-foreground max-w-[300px] break-words text-sm text-center"
+              className="text-muted-foreground break-words text-xs max-w-[350px]"
               href={`${networkBlockExplorerMap.get(toAsset.network)}${
                 order.toTransactionId
               }`}
               target="_blank"
             >
-              {order.toTransactionId}
+              {order.toTransactionId.substring(0, 32) + `...`}
             </a>
             <p className="text-xs break-words text-center mt-auto">
               If you have any issues with your swap, please contact us with your
@@ -332,7 +334,7 @@ export function SwapWidgetConfirm({
             initial={false}
             className="flex flex-col gap-6 items-center"
           >
-            <div className="flex gap-4 items-center w-5/6 justify-between">
+            <div className="flex gap-4 items-center w-full justify-between bg-secondary md:py-4 py-4 px-12">
               <div className="flex flex-col items-center gap-1">
                 <div className="border-4 rounded-md bg-secondary">
                   <Image
@@ -343,7 +345,7 @@ export function SwapWidgetConfirm({
                     className="h-fit w-fit rounded-3xl"
                   />
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">{`${fromAsset.id}`}</p>
+                <p className="text-sm text-secondary-foreground font-medium">{`${fromAsset.id}`}</p>
                 <p className="text-xs text-primary font-medium">{`${fromAmount.toFixed(
                   2
                 )}`}</p>
@@ -376,7 +378,7 @@ export function SwapWidgetConfirm({
                     className="rounded-md h-fit w-fit"
                   />
                 </div>
-                <p className="text-sm text-muted-foreground font-medium">{`${toAsset.id}`}</p>
+                <p className="text-sm text-secondary-foreground font-medium">{`${toAsset.symbol}`}</p>
                 <p className="text-xs text-primary font-medium">{`${toAmount.toFixed(
                   2
                 )}`}</p>
