@@ -5,6 +5,7 @@ import { ExodusOrder } from "@/lib/swap/order";
 export async function POST(req: Request) {
   try {
     const orderParams: ExodusOrder = await req.json();
+    console.log({ orderParams });
     const response = await fetch(
       preparePostRequest("orders", "POST", orderParams)
     );
