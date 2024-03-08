@@ -78,8 +78,8 @@ export function SwapWidget({ assets }: { assets: AssetNetworkRecord }) {
         if (value.length > 0) {
           const lastRate = value.shift();
           setExchangeRate(lastRate);
-          setMinimum(lastRate.min.value * 1.03);
-          setMaximum(lastRate.max.value * 0.97);
+          setMinimum(parseFloat(lastRate.min.value) * 1.03);
+          setMaximum(parseFloat(lastRate.max.value) * 0.97);
         } else {
           setExchangeRate(0);
           setMinimum(0);

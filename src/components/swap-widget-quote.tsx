@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { LoadingSpinner } from "./ui/loading-spinner";
 import { ArrowDownUpIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "./ui/button";
 
 export function SwapWidgetQuote({
   assets,
@@ -65,12 +66,12 @@ export function SwapWidgetQuote({
         active: false,
         size: "",
       });
-    } else if (fromAmount >= maximum) {
+    } else if (fromAmount > maximum) {
       setLimitWarning({
         active: true,
         size: "maximum",
       });
-    } else if (fromAmount <= minimum) {
+    } else if (fromAmount < minimum) {
       setLimitWarning({
         active: true,
         size: "minimum",
@@ -82,6 +83,14 @@ export function SwapWidgetQuote({
       });
     }
   }, [fromAmount, minimum, maximum]);
+
+  const onSetMaximum = () => {
+    amountCallback(maximum, "from");
+  };
+
+  const onSetMinimum = () => {
+    amountCallback(minimum, "from");
+  };
 
   return (
     <Card className="max-w-[500px]">
@@ -103,12 +112,12 @@ export function SwapWidgetQuote({
             animate={
               isAnimating
                 ? {
-                    y: 100,
+                    y: 132,
                     transitionEnd: {
                       y: 0,
                     },
                     transition: {
-                      duration: 0.15,
+                      duration: 0.2,
                       type: "tween",
                     },
                   }
@@ -144,36 +153,50 @@ export function SwapWidgetQuote({
               from
             </SwapSelectionDialog>
           </motion.div>
-          <motion.div
-            className="flex justify-center w-fit mt-2 hover:cursor-pointer"
-            onClick={() => {
-              if (!isAnimating) setIsAnimating(true);
-            }}
-            animate={
-              isAnimating
-                ? {
-                    rotate: 180,
-                    transition: {
-                      duration: 0.15,
-                    },
-                    transitionEnd: { rotate: 0 },
-                  }
-                : {}
-            }
-          >
-            <ArrowDownUpIcon className="w-6 h-6 text-primary hover:cursor-pointer" />
-          </motion.div>
+          <div className="flex justify-center w-fit mt-4 mb-2 items-center gap-x-8">
+            <Button variant="link" onClick={onSetMinimum}>
+              min
+            </Button>
+            <motion.div
+              className="hover:cursor-pointer"
+              onClick={() => {
+                if (!isAnimating) setIsAnimating(true);
+              }}
+              animate={
+                isAnimating
+                  ? {
+                      rotate: 180,
+                      transition: {
+                        duration: 0.2,
+                        type: "tween",
+                      },
+                      transitionEnd: { rotate: 0 },
+                    }
+                  : {}
+              }
+            >
+              <ArrowDownUpIcon className="w-6 h-6 text-primary hover:cursor-pointer" />
+            </motion.div>
+            <Button
+              variant="link"
+              className="border-primary"
+              onClick={onSetMaximum}
+            >
+              max
+            </Button>
+          </div>
+
           <motion.div
             className="flex items-center justify-between w-full"
             animate={
               isAnimating
                 ? {
-                    y: -100,
+                    y: -132,
                     transitionEnd: {
                       y: 0,
                     },
                     transition: {
-                      duration: 0.15,
+                      duration: 0.2,
                       type: "tween",
                     },
                   }
